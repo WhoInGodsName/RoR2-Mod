@@ -3,7 +3,7 @@ using RoR2;
 
 namespace RoR2Mod
 {
-
+    //Main cheat class
     internal class RoRMod : MonoBehaviour
     {
         CharacterBody _Body = FindObjectOfType<CharacterBody>();
