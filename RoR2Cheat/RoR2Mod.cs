@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using RoR2;
 using RoR2Cheat;
 
@@ -8,26 +9,36 @@ namespace RoR2Mod
     internal class RoRMod : MonoBehaviour
     {
         CharacterBody _Body;
-        CharacterMaster _Master;
-        LocalUser _LocalUser;
         public static CharacterMaster LocalPlayer = null;
         NetworkUser _NetworkUser;
         TeamManager _TeamManager;
         TeleporterInteraction _Teleporter;
+        CharacterVars characterVars = new CharacterVars();
 
         //Toggles for menu
         bool maxFireRate = false;
+        bool godMode = false;
+
+        //Player Speed
+        string speedLabel = "   > Character Speed <";
+        bool increaseSpeed = false;
+        bool decreaseSpeed = false;
+
+        int x = 1;
 
         public void OnGUI()
         {
-            Render.Begin("MEOWWW", 4f, 10f, 180f, 500f, 4f, 20f, 2f);
-            //GUI.Box(new Rect(0f, 0f, 300f, 500f), "");
+            Render.Begin("Risk of Tears", 4f, 1f, 180f, 500f, 10f, 20f, 2f);
+            //GUI.Box(new Rect(0f, 0f, 300f, 500f), godMode.ToString());
             if (Render.Button("Toggle Firerate")) { maxFireRate = true; }
+            if (Render.Button("Toggle Godmode")) { godMode = !godMode; }
+            Render.Label(speedLabel);
+            if (Render.Button("+ Speed")) { increaseSpeed = true;}
+            if (Render.Button("- Speed")) { decreaseSpeed = true; }
         }
         public void Start()
         {
             UpdateLocalPlayer();
-            _Master = FindObjectOfType<CharacterMaster>();
             _NetworkUser = FindObjectOfType<NetworkUser>(); 
             _TeamManager = FindObjectOfType<TeamManager>();
             _Teleporter = FindObjectOfType<TeleporterInteraction>();
@@ -35,13 +46,36 @@ namespace RoR2Mod
 
         public void Update()
         {
+            string y = x.ToString();
             UpdateLocalPlayer();
             _Body = LocalPlayer.GetBody();
             if(maxFireRate == true)
             {
                 _Body.baseAttackSpeed = 50f;
             }
-            
+            if(godMode == true)
+            {
+                characterVars.health = _Body.healthComponent.health;
+                _Body.healthComponent.godMode = true;
+                _Body.healthComponent.health = 999999999999f;
+            }
+            else if(godMode == false)
+            {
+                _Body.healthComponent.godMode = false;
+            }
+
+            //Character speed toggle up and down.
+            if(increaseSpeed == true)
+            {
+                increaseSpeed = !increaseSpeed;
+                _Body.baseMoveSpeed += 1f;
+            }
+            if (decreaseSpeed == true)
+            {
+                decreaseSpeed = !decreaseSpeed;
+                _Body.baseMoveSpeed -= 1f;
+            }
+
         }
 
         public void UnlockAll()
