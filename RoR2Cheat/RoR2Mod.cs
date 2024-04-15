@@ -8,6 +8,8 @@ namespace RoR2Mod
     {
         CharacterBody _Body;
         CharacterMaster _Master;
+        LocalUser _LocalUser;
+        public static CharacterMaster LocalPlayer = null;
         NetworkUser _NetworkUser;
         TeamManager _TeamManager;
         TeleporterInteraction _Teleporter;
@@ -19,18 +21,56 @@ namespace RoR2Mod
         }
         public void Start()
         {
-
-            _Body = FindObjectOfType<CharacterBody>();
+            UpdateLocalPlayer();
             _Master = FindObjectOfType<CharacterMaster>();
-            _NetworkUser = FindObjectOfType<NetworkUser>();
+            _NetworkUser = FindObjectOfType<NetworkUser>(); 
             _TeamManager = FindObjectOfType<TeamManager>();
             _Teleporter = FindObjectOfType<TeleporterInteraction>();
+            UnlockAll();
         }
 
         public void Update()
         {
-            _Body.sprintingSpeedMultiplier = 50f;
+            UpdateLocalPlayer();
+            _Body = LocalPlayer.GetBody();
+            _Body.baseAttackSpeed = 50f;
         }
 
+        public void UnlockAll()
+        {
+            UserProfile userProfile = LocalUserManager.GetFirstLocalUser().userProfile;
+
+            foreach (ItemIndex item in ItemCatalog.allItems)
+            {
+                userProfile.DiscoverPickup(PickupCatalog.FindPickupIndex(item));
+            }
+            foreach (EquipmentIndex equipmentIndex in EquipmentCatalog.allEquipment)
+            {
+                userProfile.DiscoverPickup(PickupCatalog.FindPickupIndex(equipmentIndex));
+            }
+
+            UserAchievementManager UAM = AchievementManager.GetUserAchievementManager(RoR2.LocalUserManager.GetFirstLocalUser());
+            foreach (AchievementDef AD in AchievementManager.allAchievementDefs)
+            {
+                UAM.GrantAchievement(AD);
+            }
+        }
+
+        public static void UpdateLocalPlayer()
+        {
+            if (RoRMod.LocalPlayer != null)
+            {
+                return;
+            }
+            LocalPlayer = LocalUserManager.GetFirstLocalUser().cachedMasterController.master;
+            /*foreach (LocalUser localUser in LocalUserManager.readOnlyLocalUsersList)
+            {
+                if (localUser.currentNetworkUser != null && localUser.currentNetworkUser.isLocalPlayer && localUser.cachedMasterController != null && localUser.cachedMasterController.master != null)
+                {
+                    RoRMod.LocalPlayer = localUser.cachedMasterController.master;
+                    break;
+                }
+            }*/
+        }
     }
 }
