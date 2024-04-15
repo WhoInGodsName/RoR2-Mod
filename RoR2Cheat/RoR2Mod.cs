@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using RoR2;
+using RoR2Cheat;
 
 namespace RoR2Mod
 {
@@ -14,10 +15,14 @@ namespace RoR2Mod
         TeamManager _TeamManager;
         TeleporterInteraction _Teleporter;
 
+        //Toggles for menu
+        bool maxFireRate = false;
+
         public void OnGUI()
         {
-            GUI.Box(new Rect(0f, 0f, 300f, 500f), "");
-            //GUI.Label(new Rect(0f, 0f, 100f, 30f), "Label.");
+            Render.Begin("MEOWWW", 4f, 10f, 180f, 500f, 4f, 20f, 2f);
+            //GUI.Box(new Rect(0f, 0f, 300f, 500f), "");
+            if (Render.Button("Toggle Firerate")) { maxFireRate = true; }
         }
         public void Start()
         {
@@ -26,14 +31,17 @@ namespace RoR2Mod
             _NetworkUser = FindObjectOfType<NetworkUser>(); 
             _TeamManager = FindObjectOfType<TeamManager>();
             _Teleporter = FindObjectOfType<TeleporterInteraction>();
-            UnlockAll();
         }
 
         public void Update()
         {
             UpdateLocalPlayer();
             _Body = LocalPlayer.GetBody();
-            _Body.baseAttackSpeed = 50f;
+            if(maxFireRate == true)
+            {
+                _Body.baseAttackSpeed = 50f;
+            }
+            
         }
 
         public void UnlockAll()
@@ -63,11 +71,14 @@ namespace RoR2Mod
                 return;
             }
             LocalPlayer = LocalUserManager.GetFirstLocalUser().cachedMasterController.master;
-            /*foreach (LocalUser localUser in LocalUserManager.readOnlyLocalUsersList)
+            /*for(int i = 0; i < LocalUserManager.readOnlyLocalUsersList.Count; i++) 
             {
-                if (localUser.currentNetworkUser != null && localUser.currentNetworkUser.isLocalPlayer && localUser.cachedMasterController != null && localUser.cachedMasterController.master != null)
+                if (LocalUserManager.readOnlyLocalUsersList[i].currentNetworkUser != null 
+                    && LocalUserManager.readOnlyLocalUsersList[i].currentNetworkUser.isLocalPlayer 
+                    && LocalUserManager.readOnlyLocalUsersList[i].cachedMasterController != null 
+                    && LocalUserManager.readOnlyLocalUsersList[i].cachedMasterController.master != null)
                 {
-                    RoRMod.LocalPlayer = localUser.cachedMasterController.master;
+                    RoRMod.LocalPlayer = LocalUserManager.readOnlyLocalUsersList[i].cachedMasterController.master;
                     break;
                 }
             }*/
