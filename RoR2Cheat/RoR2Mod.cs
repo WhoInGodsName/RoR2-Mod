@@ -34,7 +34,7 @@ namespace RoR2Mod
 
         public void OnGUI()
         {
-            Render.Begin("Risk of Tears", 4f, 1f, 180f, 500f, 10f, 20f, 2f);
+            Render.Begin("Risk of Tears", 4f, 1f, 180f, 600f, 10f, 20f, 2f);
             //GUI.Box(new Rect(0f, 0f, 300f, 500f), godMode.ToString());
             if (Render.Button("Toggle Firerate")) { maxFireRate = true; }
             if (Render.Button("Toggle Godmode")) { godMode = !godMode; }
@@ -44,22 +44,27 @@ namespace RoR2Mod
             Render.Label(infJumpLabel);
             if (Render.Button("Toggle Inf Jump")) { jumpCount = !jumpCount;  }
             Render.Label(noReloadLabel);
-            if (Render.Button("Toggle No Timer")) { noSkillReload = !noSkillReload; }
+            if (Render.Button("Toggle No Cooldown")) { noSkillReload = !noSkillReload; }
             Render.Label("       > Unlock All <");
             if (Render.Button("Unlock")) { UnlockAll(); }
             Render.Label("       > Spawn Body <");
             if(Render.Button("LunarGolemBody")){   LocalPlayer.CallCmdRespawn("LunarGolemBody"); }
             if(Render.Button("MegaDroneBody")){   LocalPlayer.CallCmdRespawn("MegaDroneBody"); }
-            if(Render.Button("MegaConstructBody")){   LocalPlayer.CallCmdRespawn("MegaConstructBody"); }
+            if(Render.Button("GrandParentBody")){   LocalPlayer.CallCmdRespawn("GrandParentBody"); }
+            if(Render.Button("GolemBody")){   LocalPlayer.CallCmdRespawn("GolemBody"); }
             if(Render.Button("Engineer")){   LocalPlayer.CallCmdRespawn("EngiBody"); }
             if(Render.Button("Huntress")){   LocalPlayer.CallCmdRespawn("HuntressBody"); }
             if(Render.Button("Captain")){   LocalPlayer.CallCmdRespawn("CaptainBody"); }
             if(Render.Button("Loader")){   LocalPlayer.CallCmdRespawn("LoaderBody"); }
             Render.Label("       > Lunar Coins <");
-            if (Render.Button("+5 Lunar coin")){
-                _NetworkUser.AwardLunarCoins(5);
-                _NetworkUser.CallRpcAwardLunarCoins(5); }
-            if(Render.Button("Change Username"))
+            if (Render.Button("inf Lunar coin")){
+                _NetworkUser.CallCmdSetNetLunarCoins(9999999u);
+                //_NetworkUser.AwardLunarCoins(5);
+                //_NetworkUser.CallRpcAwardLunarCoins(5);
+            }
+            Render.Label("       > Money <");
+            if (Render.Button("+10k Money")) { LocalPlayer.GiveMoney(10000); }
+            if (Render.Button("Change Username"))
             {
                 _NetworkUser.userName = "Phat coc <3";
             }
