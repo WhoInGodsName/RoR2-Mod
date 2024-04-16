@@ -20,11 +20,17 @@ namespace RoR2Mod
         bool godMode = false;
 
         //Player Speed
-        string speedLabel = "   > Character Speed <";
+        string speedLabel = "      > Character Speed <";
         bool increaseSpeed = false;
         bool decreaseSpeed = false;
 
-        int x = 1;
+        //Player jump
+        string infJumpLabel = "       > Inf Jump <";
+        bool jumpCount = false;
+
+        //No skill reload time  
+        string noReloadLabel = "       > No Skill Timer <";
+        bool noSkillReload = false;
 
         public void OnGUI()
         {
@@ -35,6 +41,18 @@ namespace RoR2Mod
             Render.Label(speedLabel);
             if (Render.Button("+ Speed")) { increaseSpeed = true;}
             if (Render.Button("- Speed")) { decreaseSpeed = true; }
+            Render.Label(infJumpLabel);
+            if (Render.Button("Toggle Inf Jump")) { jumpCount = !jumpCount;  }
+            Render.Label(noReloadLabel);
+            if (Render.Button("Toggle No Timer")) { noSkillReload = !noSkillReload; }
+            Render.Label("       > Unlock All <");
+            if (Render.Button("Unlock")) { UnlockAll(); }
+            Render.Label("       > Respawn <");
+            if(Render.Button("Respawn"))
+            {   LocalPlayer.CallCmdRespawn("GolemBody");
+                //LocalPlayer.RespawnExtraLife();
+                //LocalPlayer.TransformBody("GolemBody");
+            }
         }
         public void Start()
         {
@@ -46,7 +64,7 @@ namespace RoR2Mod
 
         public void Update()
         {
-            string y = x.ToString();
+            //string y = x.ToString();
             UpdateLocalPlayer();
             _Body = LocalPlayer.GetBody();
             if(maxFireRate == true)
@@ -76,6 +94,28 @@ namespace RoR2Mod
                 _Body.baseMoveSpeed -= 1f;
             }
 
+            //Infinite jump toggle.
+            if(jumpCount == true)
+            {
+                _Body.baseJumpCount = 99999;
+            }
+            else if(jumpCount == false)
+            {
+                _Body.baseJumpCount = 1;
+            }
+
+            if(noSkillReload == true)
+            {
+                _Body.skillLocator.primary.rechargeStopwatch = 0f;
+                _Body.skillLocator.primary.stock = 999;
+                _Body.skillLocator.secondary.rechargeStopwatch = 0f;
+                _Body.skillLocator.secondary.stock = 999;
+                _Body.skillLocator.utility.rechargeStopwatch = 0f;
+                _Body.skillLocator.utility.stock = 999;
+                _Body.skillLocator.special.rechargeStopwatch = 0f;
+                _Body.skillLocator.special.stock = 999;
+            }
+            
         }
 
         public void UnlockAll()
