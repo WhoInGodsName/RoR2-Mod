@@ -47,12 +47,25 @@ namespace RoR2Mod
             if (Render.Button("Toggle No Timer")) { noSkillReload = !noSkillReload; }
             Render.Label("       > Unlock All <");
             if (Render.Button("Unlock")) { UnlockAll(); }
-            Render.Label("       > Respawn <");
-            if(Render.Button("Respawn"))
-            {   LocalPlayer.CallCmdRespawn("GolemBody");
-                //LocalPlayer.RespawnExtraLife();
-                //LocalPlayer.TransformBody("GolemBody");
+            Render.Label("       > Spawn Body <");
+            if(Render.Button("LunarGolemBody")){   LocalPlayer.CallCmdRespawn("LunarGolemBody"); }
+            if(Render.Button("MegaDroneBody")){   LocalPlayer.CallCmdRespawn("MegaDroneBody"); }
+            if(Render.Button("MegaConstructBody")){   LocalPlayer.CallCmdRespawn("MegaConstructBody"); }
+            if(Render.Button("Engineer")){   LocalPlayer.CallCmdRespawn("EngiBody"); }
+            if(Render.Button("Huntress")){   LocalPlayer.CallCmdRespawn("HuntressBody"); }
+            if(Render.Button("Captain")){   LocalPlayer.CallCmdRespawn("CaptainBody"); }
+            if(Render.Button("Loader")){   LocalPlayer.CallCmdRespawn("LoaderBody"); }
+            Render.Label("       > Lunar Coins <");
+            if (Render.Button("+5 Lunar coin")){
+                _NetworkUser.AwardLunarCoins(5);
+                _NetworkUser.CallRpcAwardLunarCoins(5); }
+            if(Render.Button("Change Username"))
+            {
+                _NetworkUser.userName = "Phat coc <3";
             }
+
+            
+
         }
         public void Start()
         {
@@ -66,7 +79,9 @@ namespace RoR2Mod
         {
             //string y = x.ToString();
             UpdateLocalPlayer();
+            _NetworkUser = FindObjectOfType<NetworkUser>();
             _Body = LocalPlayer.GetBody();
+
             if(maxFireRate == true)
             {
                 _Body.baseAttackSpeed = 50f;

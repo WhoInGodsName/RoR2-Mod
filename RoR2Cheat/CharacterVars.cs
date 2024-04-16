@@ -10,5 +10,6 @@ namespace RoR2Cheat
     internal class CharacterVars : MonoBehaviour
     {
         public float health = 250f;
+        public string bodyName = "";
     }
 }
